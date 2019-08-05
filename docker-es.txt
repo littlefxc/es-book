@@ -1,0 +1,3 @@
+docker run -p 9200:9200 -p 9300:9300 -d -e "discovery.type=single-node" -v /Users/fengxuechao/IdeaProjects/es-book/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml -v /Users/fengxuechao/plugins:/usr/share/elasticsearch/plugins --name="es-dev" elasticsearch:7.1.1
+
+./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.1.1/elasticsearch-analysis-ik-7.1.1.zip
