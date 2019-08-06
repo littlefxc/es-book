@@ -38,11 +38,8 @@ public class BookController {
     /**
      * 查看文档
      */
-    @GetMapping("/detail")
-    public Result detail(Integer id) {
-        if (null == id) {
-            return Result.error("ID不能为空");
-        }
+    @GetMapping("/{id}")
+    public Result detail(@PathVariable Integer id) {
         BookModel book = bookService.detail(id);
         return Result.ok(book);
     }
@@ -50,7 +47,7 @@ public class BookController {
     /**
      * 添加文档
      */
-    @PostMapping("/add")
+    @PostMapping
     public Result add(@RequestBody BookModel bookModel) {
         bookService.save(bookModel);
         log.info("插入文档成功！请求参数: {}", JSON.toJSONString(bookModel));
@@ -60,12 +57,8 @@ public class BookController {
     /**
      * 修改文档
      */
-    @PostMapping("/update")
-    public Result update(@RequestBody BookModel bookModel) {
-        Integer id = bookModel.getId();
-        if (null == id) {
-            return Result.error("ID不能为空");
-        }
+    @PutMapping("/{id}")
+    public Result update(@PathVariable Integer id, @RequestBody BookModel bookModel) {
         BookModel book = bookService.detail(id);
         if (null == book) {
             return Result.error("记录不存在");
@@ -78,8 +71,8 @@ public class BookController {
     /**
      * 删除文档
      */
-    @GetMapping("/delete")
-    public Result delete(Integer id) {
+    @DeleteMapping("/{id}")
+    public Result delete(@PathVariable Integer id) {
         if (null == id) {
             return Result.error("ID不能为空");
         }
