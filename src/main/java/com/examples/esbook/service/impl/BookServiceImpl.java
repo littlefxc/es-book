@@ -55,17 +55,25 @@ public class BookServiceImpl implements BookService {
         this.client = client;
     }
 
+    /**
+     * 分页查询
+     *
+     * @param bookRequestVo
+     * @return
+     */
     @Override
     public Page<BookModel> list(BookRequestVo bookRequestVo) {
         int pageNo = bookRequestVo.getPageNo();
         int pageSize = bookRequestVo.getPageSize();
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        // 分页
         sourceBuilder.from(pageNo - 1);
         sourceBuilder.size(pageSize);
         sourceBuilder.sort(new FieldSortBuilder("id").order(SortOrder.ASC));
 //        sourceBuilder.query(QueryBuilders.matchAllQuery());
 
+        // 构建查询条件
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         if (StringUtils.isNotBlank(bookRequestVo.getName())) {
@@ -93,10 +101,13 @@ public class BookServiceImpl implements BookService {
         sourceBuilder.query(boolQueryBuilder);
 
         SearchRequest searchRequest = new SearchRequest();
+        // 设置查询索引
         searchRequest.indices(INDEX_NAME);
+        // 设置查询请求
         searchRequest.source(sourceBuilder);
 
         try {
+            // 查询
             SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
             RestStatus restStatus = searchResponse.status();
@@ -105,6 +116,7 @@ public class BookServiceImpl implements BookService {
             }
 
             List<BookModel> list = new ArrayList<>();
+            // 查询命中
             SearchHits searchHits = searchResponse.getHits();
             for (SearchHit hit : searchHits.getHits()) {
                 String source = hit.getSourceAsString();
@@ -114,8 +126,10 @@ public class BookServiceImpl implements BookService {
 
             long totalHits = searchHits.getTotalHits().value;
 
+            // 构建分页返回结果
             Page<BookModel> page = new Page<>(pageNo, pageSize, totalHits, list);
 
+            // 查询耗时
             TimeValue took = searchResponse.getTook();
             log.info("查询成功！请求参数: {}, 用时{}毫秒", searchRequest.source().toString(), took.millis());
 
@@ -126,9 +140,16 @@ public class BookServiceImpl implements BookService {
         return null;
     }
 
+    /**
+     * 文档详情请求
+     *
+     * @param id
+     * @return
+     */
     @Override
     public BookModel detail(Integer id) {
         // GetRequest getRequest = new GetRequest(INDEX_NAME, INDEX_TYPE, String.valueOf(id));
+        // 构建查询请求
         GetRequest getRequest = new GetRequest(INDEX_NAME).id(String.valueOf(id));
         try {
             GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
@@ -156,10 +177,18 @@ public class BookServiceImpl implements BookService {
         jsonMap.put("status", bookModel.getStatus());
 
         // IndexRequest indexRequest = new IndexRequest(INDEX_NAME, INDEX_TYPE, String.valueOf(bookModel.getId()));
+        // 设置索引
         IndexRequest indexRequest = new IndexRequest(INDEX_NAME).id(String.valueOf(bookModel.getId()));
+        // 设置添加的文档内容
         indexRequest.source(jsonMap);
 
+        // 异步添加
         client.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
+
+            /**
+             * 异步成功处理函数
+             * @param indexResponse
+             */
             @Override
             public void onResponse(IndexResponse indexResponse) {
                 String index = indexResponse.getIndex();
@@ -187,6 +216,10 @@ public class BookServiceImpl implements BookService {
                 }
             }
 
+            /**
+             * 异步失败处理函数
+             * @param e
+             */
             @Override
             public void onFailure(Exception e) {
                 log.error(e.getMessage(), e);
@@ -194,11 +227,17 @@ public class BookServiceImpl implements BookService {
         });
     }
 
+    /**
+     * 修改文档
+     *
+     * @param bookModel
+     */
     @Override
     public void update(BookModel bookModel) {
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("sellReason", bookModel.getSellReason());
         // UpdateRequest request = new UpdateRequest(INDEX_NAME, INDEX_TYPE, String.valueOf(bookModel.getId()));
+        // 构建修改请求
         UpdateRequest request = new UpdateRequest(INDEX_NAME, String.valueOf(bookModel.getId()));
         request.doc(jsonMap);
         try {
@@ -208,9 +247,15 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    /**
+     * 删除
+     *
+     * @param id
+     */
     @Override
     public void delete(Integer id) {
         // DeleteRequest request = new DeleteRequest(INDEX_NAME, INDEX_TYPE, String.valueOf(id));
+        // 构建删除请求
         DeleteRequest request = new DeleteRequest(INDEX_NAME, String.valueOf(id));
         try {
             DeleteResponse deleteResponse = client.delete(request, RequestOptions.DEFAULT);
