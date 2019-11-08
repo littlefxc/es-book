@@ -11,6 +11,7 @@ import java.util.List;
  * @author fengxuechao
  * @since 1.0.2
  */
+@Deprecated
 @Data
 @ConfigurationProperties(prefix = "elasticsearch")
 public class ElasticsearchProperties {

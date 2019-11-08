@@ -8,20 +8,20 @@ import lombok.Data;
  * @date 2019/8/5
  */
 @Data
-public class Result {
+public class Result<T> {
 
     private Integer code;
 
     private String msg;
 
-    private Object data;
+    private T data;
 
     public Result(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
-    public Result(int code, String msg, Object data) {
+    public Result(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;

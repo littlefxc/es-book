@@ -1,0 +1,43 @@
+GET http://localhost:8080/book/list?pageSize=10&pageNo=1
+
+###
+
+GET http://localhost:8080/v2/book/list?pageSize=10&pageNo=1
+
+###
+
+POST http://localhost:8080/book
+Content-Type: application/json
+
+{
+  "id": 4,
+  "name": "张爱玲全集",
+  "author": "张爱玲",
+  "category": 10012,
+  "price": 216,
+  "sellReason": "《倾城之恋》《琉璃之瓦》《金锁记》《连环套》",
+  "sellTime": "2018-12-01",
+  "status": 1
+}
+
+###
+
+PUT http://localhost:8080/v2/book/3
+Content-Type: application/json
+
+{
+  "id": 3,
+  "name": "神雕侠侣",
+  "author": "金庸",
+  "category": 10011,
+  "price": 70.6,
+  "sellReason": "风陵渡口初相遇，一见杨过误终身",
+  "sellTime": "2018-11-11",
+  "status": 1
+}
+
+###
+
+GET http://localhost:8080/v2/book/4
+
+###

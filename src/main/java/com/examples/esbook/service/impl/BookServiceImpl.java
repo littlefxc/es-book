@@ -43,7 +43,8 @@ import java.util.stream.Collectors;
  * @date 2019/8/5
  */
 @Slf4j
-@Service
+@Deprecated
+@Service("bookService")
 public class BookServiceImpl implements BookService {
 
     private static final String INDEX_NAME = "book";

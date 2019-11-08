@@ -32,6 +32,7 @@ import java.util.List;
  * @author fengxuechao
  * @since 1.1.0
  */
+@Deprecated
 @Configuration
 @ConditionalOnClass({Client.class, RestHighLevelClient.class})
 @EnableConfigurationProperties(ElasticsearchProperties.class)

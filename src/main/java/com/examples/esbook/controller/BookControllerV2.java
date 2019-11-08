@@ -6,7 +6,6 @@ import com.examples.esbook.domain.common.Result;
 import com.examples.esbook.domain.model.BookModel;
 import com.examples.esbook.domain.vo.BookRequestVo;
 import com.examples.esbook.service.BookService;
-import com.examples.esbook.service.impl.BookServiceImpl;
 import com.examples.esbook.service.impl.BookServiceV2Impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +18,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("book")
-public class BookController {
+@RequestMapping("v2/book")
+public class BookControllerV2 {
 
     @Autowired
-    private BookServiceImpl bookService;
+    private BookServiceV2Impl bookService;
 
     /**
      * 列表分页查询

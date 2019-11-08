@@ -78,7 +78,22 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.awifi.capacity</groupId>
+            <artifactId>elasticsearch-springboot-starter</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>aWiFi-rep</id>
+            <name>Private Repository</name>
+            <url>http://192.168.41.25:8081/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
